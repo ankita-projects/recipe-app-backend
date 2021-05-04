@@ -59,7 +59,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/recipes/search",methods={"GET"}, name="get_recipies_by_name" )
+     * @Route("/search",methods={"GET"}, name="get_recipies_by_name" )
      */
     public function search(Request $request, LoggerInterface $logger): Response
     {
