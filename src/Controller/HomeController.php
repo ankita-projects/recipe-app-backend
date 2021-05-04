@@ -40,9 +40,9 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/recipies/{recipieId}",methods={"GET"}, name="get_recipies_by_id" )
+     * @Route("/recipes/{recipeId}",methods={"GET"}, name="get_recipies_by_id" )
      */
-    public function recipieById(Request $request, $recipieId, LoggerInterface $logger): Response
+    public function recipieById(Request $request, $recipeId, LoggerInterface $logger): Response
     {
         $rootPath = $this->getParameter('kernel.project_dir');
         $res = file_get_contents($rootPath . '/resources/recipes.json');
@@ -50,11 +50,33 @@ class HomeController extends AbstractController
         $response = '';
         foreach ($resjson['recipes'] as $key => $jsons) { // This will search in the 2 jsons
             $logger->info($key);
-            if ($jsons['id'] == $recipieId) {
+            if ($jsons['id'] == $recipeId) {
                 $response = $jsons;
                 break;
             }
         }
+        return $this->json($response);
+    }
+
+    /**
+     * @Route("/search",methods={"GET"}, name="get_recipies_by_name" )
+     */
+    public function search(Request $request, LoggerInterface $logger): Response
+    {
+        $rootPath = $this->getParameter('kernel.project_dir');
+        $res = file_get_contents($rootPath . '/resources/recipes.json');
+        $query = $request->query->get('name');
+        $resjson = json_decode($res, true);
+        $response = '';
+        foreach ($resjson['recipes'] as $key => $jsons) { // This will search in the 2 jsons
+            $name = $jsons['name'];
+            $content = new UnicodeString($name);
+            if ($content->ignoreCase()->startsWith($query)) {
+                $response = $jsons;
+                break;
+            }
+        }
+
         return $this->json($response);
     }
 }
