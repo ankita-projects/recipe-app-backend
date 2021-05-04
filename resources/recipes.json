@@ -1,0 +1,20 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "name": "Paneer Curry",
+      "type": "vegitarian",
+      "img": "https://www.lifeberrys.com/img/article/paneer-sabzi-1612529504-lb.jpg",
+      "desc": "Balti paneer masala is a quick and delicious way to combine vegetables and paneer. They are cooked together with spices to impart a distinctive flavor. It Paneer balti masala is an easy and restaurant style curry recipe. Paneer is common ingredients which are used in Indian cooking. You can make various dishes like paneer pakora, Paneer Balls, Paneer Chicken Curry, and much more delicious delicacy with paneer.",
+      "link": "https://www.rasoimenu.com/recipe/balti-paneer-recipe/"
+    },
+    {
+      "id": 2,
+      "name": "NaanBread",
+      "type": "vegitarian",
+      "img": "https://rasamalaysia.com/wp-content/uploads/2019/03/naan3.jpg",
+      "desc": "Naan is a soft and pillowy Indian-style flatbread traditionally made in a tandoor, or cylindrical clay oven. The dough gets slapped against the walls of the tandoor, where it adheres and bakes quickly over a burning fire. Fortunately for all of us, it’s possible to make it at home and replicate the high heat and charred flavor of a clay oven by using a very hot cast iron skillet or nonstick pan.",
+      "link": "https://lilluna.com/homemade-naan-bread/"
+    }
+  ]
+}

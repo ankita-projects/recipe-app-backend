@@ -25,6 +25,16 @@ class HomeController extends AbstractController
      */
     public function recipes(Request $request): Response
     {
-        return new Response('This is list of recipes home....');
+        $rootPath = $this->getParameter('kernel.project_dir');
+        $res = file_get_contents($rootPath . '/resources/recipes.json');
+        $resjson = json_decode($res, true);
+        $response = new Response(
+            json_encode($resjson),
+            Response::HTTP_OK,
+            ['Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Credentials' => 'true',
+                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS']
+        );
+        return $response;
     }
 }
