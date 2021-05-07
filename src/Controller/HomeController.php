@@ -7,12 +7,66 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\UnicodeString;
+use App\Entity\Recipe;
 
 
 
 
 class HomeController extends AbstractController
 {
+
+    /**
+     * @Route("/recipe/add", name="add_new_recipe")
+     */
+    public function addRecipe(){
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $newRecipe = new Recipe();
+        $newRecipe->setName('Paneer');
+        $newRecipe->setDifficulty('easy');
+        $newRecipe->setDescription('Made with Cheese and vegetables');
+        $newRecipe->setImage('url');
+        $newRecipe->setType('easy');
+        $newRecipe->setLink('url');
+
+        $newRecipe1 = new Recipe();
+        $newRecipe1->setName('naan');
+        $newRecipe1->setDifficulty('easy');;
+        $newRecipe1->setDescription('Made with flour and milk');
+        $newRecipe1->setImage('url');
+        $newRecipe1->setType('easy');
+        $newRecipe1->setLink('url');
+
+        $entityManager->persist($newRecipe);
+        $entityManager->persist($newRecipe1);
+
+        $entityManager->flush();
+
+        return new Response('trying to add new recipe...' . $newRecipe1->getId() . $newRecipe->getId());
+    }
+
+    /**
+     * @Route("/recipe/all", name="get_all_recipe")
+     */
+    public function getAllRecipe(){
+        $recipes = $this->getDoctrine()->getRepository(Recipe::class)->findAll();
+
+        $response = [];
+
+        foreach($recipes as $recipe) {
+            $response[] = array(
+                'name' => $recipe->getName(),
+                'difficulty' => $recipe->getDifficulty(),
+                'description'=> $recipe->getDescription(),
+                'image'=>$recipe->getImage(),
+                'type' => $recipe->getType(),
+                'link' => $recipe->getType(),
+            );
+        }
+
+        return $this->json($response);
+    }
+
     /**
      * @Route("/home",methods={"GET"}, name="index_page" )
      */

@@ -27,6 +27,26 @@ class Recipe
      */
     private $difficulty;
 
+    /**
+     * @ORM\Column(type="string", length=2000, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=2000, nullable=true)
+     */
+    private $image;
+
+    /**
+     * @ORM\Column(type="string", length=2000, nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $link;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +72,54 @@ class Recipe
     public function setDifficulty(string $difficulty): self
     {
         $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): self
+    {
+        $this->link = $link;
 
         return $this;
     }
