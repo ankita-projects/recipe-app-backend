@@ -67,16 +67,23 @@ class HomeController extends AbstractController
         $res = file_get_contents($rootPath . '/resources/recipes.json');
         $query = $request->query->get('name');
         $resjson = json_decode($res, true);
-        $response = '';
+        $result = '';
         foreach ($resjson['recipes'] as $key => $jsons) { // This will search in the 2 jsons
             $name = $jsons['name'];
             $content = new UnicodeString($name);
             if ($content->ignoreCase()->startsWith($query)) {
-                $response = $jsons;
+                $result = $jsons;
                 break;
             }
         }
 
-        return $this->json($response);
+        $response = new Response(
+            json_encode($result),
+            Response::HTTP_OK,
+            ['Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Credentials' => 'true',
+                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS']
+        );
+        return $response;
     }
 }
