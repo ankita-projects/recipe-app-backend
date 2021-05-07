@@ -55,6 +55,7 @@ class HomeController extends AbstractController
 
         foreach($recipes as $recipe) {
             $response[] = array(
+                'id' => $recipe->getId(),
                 'name' => $recipe->getName(),
                 'difficulty' => $recipe->getDifficulty(),
                 'description'=> $recipe->getDescription(),
@@ -66,6 +67,72 @@ class HomeController extends AbstractController
 
         return $this->json($response);
     }
+
+    /**
+     * @Route("/recipe/find/{id}", name="find_a_recipe" )
+     */
+
+    public function findRecipe($id)
+    {
+        $recipe = $this->getDoctrine()->getRepository(Recipe::class)->find($id);
+        if (!$recipe) {
+            throw $this->createNotFoundException(
+                'No recipe was found with the id: ' . $id
+            );
+        } else {
+            return $this->json([
+                'id' => $recipe->getId(),
+                'name' => $recipe->getName(),
+                'img' => $recipe->getImage(),
+                'difficulty' => $recipe->getDifficulty()
+            ]);
+        }
+    }
+        /**
+         * @Route("/recipe/edit/{id}/{name}", name="edit_a_recipe")
+         */
+        public function editRecipe($id, $name) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $recipe = $this->getDoctrine()->getRepository(Recipe::class)->find($id);
+
+            if (!$recipe) {
+                throw $this->createNotFoundException(
+                    'No recipe was found with the id: ' . $id
+                );
+            } else {
+                $recipe->setName($name);
+                $entityManager->flush();
+
+                return $this->json([
+                    'message' => 'Edited a recipe with id ' . $id
+                ]);
+            }
+        }
+
+        /**
+         * @Route("/recipe/remove/{id}", name="remove_a_recipe")
+         */
+        public function removeRecipe($id)
+        {
+            $entityManager = $this->getDoctrine()->getManager();
+            $recipe = $this->getDoctrine()->getRepository(Recipe::class)->find($id);
+
+            if (!$recipe) {
+                throw $this->createNotFoundException(
+                    'No recipe was found with the id: ' . $id
+                );
+            } else {
+                $entityManager->remove($recipe);
+                $entityManager->flush();
+
+                return $this->json([
+                    'message' => 'Removed the recipe with id ' . $id
+                ]);
+            }
+        }
+
+
+
 
     /**
      * @Route("/home",methods={"GET"}, name="index_page" )
