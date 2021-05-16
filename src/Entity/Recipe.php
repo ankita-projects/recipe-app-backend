@@ -23,7 +23,7 @@ class Recipe
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $difficulty;
 
@@ -42,6 +42,11 @@ class Recipe
      */
     private $type;
 
+
+    /**
+     * @ORM\Column(type="array", length=2000, nullable=true)
+     */
+    private $ingredients;
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
      */
@@ -67,6 +72,22 @@ class Recipe
     public function getDifficulty(): ?string
     {
         return $this->difficulty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngredients()
+    {
+        return $this->ingredients;
+    }
+
+    /**
+     * @param mixed $ingredients
+     */
+    public function setIngredients($ingredients): void
+    {
+        $this->ingredients = $ingredients;
     }
 
     public function setDifficulty(string $difficulty): self

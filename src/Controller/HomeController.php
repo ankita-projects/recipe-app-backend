@@ -16,33 +16,30 @@ class HomeController extends AbstractController
 {
 
     /**
-     * @Route("/recipe/add", name="add_new_recipe")
+     * @Route("/recipe/add",  methods={"post"}, name="add_new_recipe")
+     *
      */
-    public function addRecipe(){
+    public function addRecipe(Request $request){
         $entityManager = $this->getDoctrine()->getManager();
 
-        $newRecipe = new Recipe();
-        $newRecipe->setName('Paneer');
-        $newRecipe->setDifficulty('easy');
-        $newRecipe->setDescription('Made with Cheese and vegetables');
-        $newRecipe->setImage('url');
-        $newRecipe->setType('easy');
-        $newRecipe->setLink('url');
+        $data = json_decode($request->getContent(),true);
 
-        $newRecipe1 = new Recipe();
-        $newRecipe1->setName('naan');
-        $newRecipe1->setDifficulty('easy');;
-        $newRecipe1->setDescription('Made with flour and milk');
-        $newRecipe1->setImage('url');
-        $newRecipe1->setType('easy');
-        $newRecipe1->setLink('url');
+        $newRecipe = new Recipe();
+        $newRecipe->setName($data["name"]);
+        $newRecipe->setDifficulty($data["difficulty"]);
+        $newRecipe->setDescription($data["description"]);
+        $newRecipe->setIngredients($data["ingredients"]);
+        $newRecipe->setImage($data["image"]);
+        $newRecipe->setType($data["type"]);
+        $newRecipe->setLink($data["link"]);
 
         $entityManager->persist($newRecipe);
-        $entityManager->persist($newRecipe1);
 
         $entityManager->flush();
-
-        return new Response('trying to add new recipe...' . $newRecipe1->getId() . $newRecipe->getId());
+        $response = new Response();
+        $response->setContent('ok');
+        $response->setStatusCode(Response::HTTP_OK);
+        return $response;
     }
 
     /**
@@ -59,6 +56,7 @@ class HomeController extends AbstractController
                 'name' => $recipe->getName(),
                 'difficulty' => $recipe->getDifficulty(),
                 'description'=> $recipe->getDescription(),
+                'ingredients'=> $recipe->getIngredients(),
                 'image'=>$recipe->getImage(),
                 'type' => $recipe->getType(),
                 'link' => $recipe->getType(),
@@ -83,8 +81,12 @@ class HomeController extends AbstractController
             return $this->json([
                 'id' => $recipe->getId(),
                 'name' => $recipe->getName(),
-                'img' => $recipe->getImage(),
-                'difficulty' => $recipe->getDifficulty()
+                'difficulty' => $recipe->getDifficulty(),
+                'description'=> $recipe->getDescription(),
+                'ingredients'=> $recipe->getIngredients(),
+                'image'=>$recipe->getImage(),
+                'type' => $recipe->getType(),
+                'link' => $recipe->getType(),
             ]);
         }
     }
@@ -130,6 +132,16 @@ class HomeController extends AbstractController
                 ]);
             }
         }
+
+    /**
+     * @Route("/home1",methods={"POST"} )
+     */
+    public function home1(Request $request): Response
+    {
+        return new Response('This is my home....');
+    }
+
+
 
 
 
