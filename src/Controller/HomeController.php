@@ -133,13 +133,6 @@ class HomeController extends AbstractController
             }
         }
 
-    /**
-     * @Route("/home1",methods={"POST"} )
-     */
-    public function home1(Request $request): Response
-    {
-        return new Response('This is my home....');
-    }
 
 
 
@@ -147,76 +140,39 @@ class HomeController extends AbstractController
 
 
     /**
-     * @Route("/home",methods={"GET"}, name="index_page" )
+     * @Route("/recipe/findbyname/{name}", name="find_a_recipe_by_name" )
      */
-    public function home(Request $request): Response
-    {
-        return new Response('This is my home....');
-    }
 
-    /**
-     * @Route("/recipes",methods={"GET"}, name="get_all_recipies" )
-     */
-    public function recipes(Request $request): Response
+    public function findRecipeByName($name)
     {
-        $rootPath = $this->getParameter('kernel.project_dir');
-        $res = file_get_contents($rootPath . '/resources/recipes.json');
-        $resjson = json_decode($res, true);
-        $response = new Response(
-            json_encode($resjson),
-            Response::HTTP_OK,
-            ['Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Credentials' => 'true',
-                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS']
-        );
-        return $response;
-    }
+        $recipes = $this->getDoctrine()->getRepository(Recipe::class)->findAll();
 
-    /**
-     * @Route("/recipes/{recipeId}",methods={"GET"}, name="get_recipies_by_id" )
-     */
-    public function recipieById(Request $request, $recipeId, LoggerInterface $logger): Response
-    {
-        $rootPath = $this->getParameter('kernel.project_dir');
-        $res = file_get_contents($rootPath . '/resources/recipes.json');
-        $resjson = json_decode($res, true);
-        $response = '';
-        foreach ($resjson['recipes'] as $key => $jsons) { // This will search in the 2 jsons
-            $logger->info($key);
-            if ($jsons['id'] == $recipeId) {
-                $response = $jsons;
-                break;
-            }
+        $responseJson = [];
+
+        foreach($recipes as $recipe) {
+            $responseJson[] = array(
+                'id' => $recipe->getId(),
+                'name' => $recipe->getName(),
+                'difficulty' => $recipe->getDifficulty(),
+                'description'=> $recipe->getDescription(),
+                'ingredients'=> $recipe->getIngredients(),
+                'image'=>$recipe->getImage(),
+                'type' => $recipe->getType(),
+                'link' => $recipe->getType(),
+            );
         }
-        return $this->json($response);
-    }
 
-    /**
-     * @Route("/search",methods={"GET"}, name="get_recipies_by_name" )
-     */
-    public function search(Request $request, LoggerInterface $logger): Response
-    {
-        $rootPath = $this->getParameter('kernel.project_dir');
-        $res = file_get_contents($rootPath . '/resources/recipes.json');
-        $query = $request->query->get('name');
-        $resjson = json_decode($res, true);
         $result = '';
-        foreach ($resjson['recipes'] as $key => $jsons) { // This will search in the 2 jsons
-            $name = $jsons['name'];
-            $content = new UnicodeString($name);
-            if ($content->ignoreCase()->startsWith($query)) {
+        foreach ($responseJson as $key => $jsons) {
+            $name1 = $jsons['name'];
+
+            $content = new UnicodeString($name1);
+            if ($content->ignoreCase()->startsWith($name)) {
                 $result = $jsons;
                 break;
             }
         }
 
-        $response = new Response(
-            json_encode($result),
-            Response::HTTP_OK,
-            ['Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Credentials' => 'true',
-                'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS']
-        );
-        return $response;
+        return $this->json($result);
     }
 }
